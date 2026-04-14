@@ -1,17 +1,19 @@
 const API_URL = "https://ai-backend-ccne.onrender.com/chat";
 
+window.onload = function () {
+    document.getElementById("sendBtn").addEventListener("click", send);
+};
+
 async function send() {
     const inputEl = document.getElementById("input");
     const chat = document.getElementById("chat");
 
     const input = inputEl.value.trim();
 
-    if (!input) {
-        alert("Tulis pesan dulu");
-        return;
-    }
+    console.log("Tombol diklik:", input); // DEBUG
 
-    // tampilkan pesan user
+    if (!input) return;
+
     chat.innerHTML += `<p><b>Kamu:</b> ${input}</p>`;
 
     try {
@@ -25,15 +27,10 @@ async function send() {
 
         const data = await res.json();
 
-        if (data.reply) {
-            chat.innerHTML += `<p><b>AI:</b> ${data.reply}</p>`;
-        } else {
-            chat.innerHTML += `<p style="color:red;">Error: tidak ada response</p>`;
-        }
-
-    } catch (error) {
-        console.error(error);
-        chat.innerHTML += `<p style="color:red;">Gagal konek ke server</p>`;
+        chat.innerHTML += `<p><b>AI:</b> ${data.reply}</p>`;
+    } catch (err) {
+        console.log(err);
+        chat.innerHTML += `<p style="color:red;">Error koneksi server</p>`;
     }
 
     inputEl.value = "";
