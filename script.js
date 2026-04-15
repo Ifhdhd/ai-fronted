@@ -1,12 +1,25 @@
 const API_URL = "https://ai-backend-igmc.onrender.com/chat";
 
+const chat = document.getElementById("chat");
+const input = document.getElementById("input");
+
+function addMessage(text, type) {
+    const div = document.createElement("div");
+    div.className = "msg " + type;
+    div.innerText = text;
+    chat.appendChild(div);
+
+    chat.scrollTop = chat.scrollHeight;
+}
+
 async function send() {
-    const input = document.getElementById("input");
-    const chat = document.getElementById("chat");
+    const message = input.value.trim();
+    if (!message) return;
 
-    const message = input.value;
+    addMessage(message, "user");
+    input.value = "";
 
-    chat.innerHTML += `<p><b>Kamu:</b> ${message}</p>`;
+    addMessage("...", "ai"); // loading
 
     try {
         const res = await fetch(API_URL, {
@@ -14,22 +27,29 @@ async function send() {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ message: message })
+            body: JSON.stringify({ message })
         });
 
         const data = await res.json();
 
+        // hapus loading
+        chat.lastChild.remove();
+
         if (data.reply) {
-            chat.innerHTML += `<p><b>AI:</b> ${data.reply}</p>`;
-        } else if (data.error) {
-            chat.innerHTML += `<p style="color:red">ERROR: ${JSON.stringify(data.error)}</p>`;
+            addMessage(data.reply, "ai");
         } else {
-            chat.innerHTML += `<p style="color:red">UNKNOWN: ${JSON.stringify(data)}</p>`;
+            addMessage("Error: " + JSON.stringify(data.error), "ai");
         }
 
     } catch (err) {
-        chat.innerHTML += `<p style="color:red">FETCH ERROR: ${err}</p>`;
+        chat.lastChild.remove();
+        addMessage("Server error 😢", "ai");
     }
-
-    input.value = "";
 }
+
+// enter = kirim
+input.addEventListener("keypress", function(e) {
+    if (e.key === "Enter") {
+        send();
+    }
+});
