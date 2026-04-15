@@ -1,4 +1,4 @@
-const API_URL = "https://ai-backend-ccne.onrender.com/chat";
+const API_URL = "https://corsproxy.io/?https://ai-backend-ccne.onrender.com/chat";
 
 document.getElementById("sendBtn").addEventListener("click", send);
 
@@ -14,14 +14,11 @@ async function send() {
     try {
         const res = await fetch(API_URL, {
             method: "POST",
-            mode: "cors", // 🔥 PENTING
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({ message: input })
         });
-
-        console.log("STATUS:", res.status);
 
         const data = await res.json();
 
@@ -32,7 +29,7 @@ async function send() {
         }
 
     } catch (err) {
-        console.log("ERROR:", err);
+        console.log(err);
         chat.innerHTML += `<p style="color:red;">Error koneksi server</p>`;
     }
 
