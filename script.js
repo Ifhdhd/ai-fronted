@@ -21,12 +21,14 @@ async function send() {
 
         if (data.reply) {
             chat.innerHTML += `<p><b>AI:</b> ${data.reply}</p>`;
+        } else if (data.error) {
+            chat.innerHTML += `<p style="color:red">ERROR: ${JSON.stringify(data.error)}</p>`;
         } else {
-            chat.innerHTML += `<p style="color:red">${JSON.stringify(data)}</p>`;
+            chat.innerHTML += `<p style="color:red">UNKNOWN: ${JSON.stringify(data)}</p>`;
         }
 
     } catch (err) {
-        chat.innerHTML += `<p style="color:red">Error: ${err}</p>`;
+        chat.innerHTML += `<p style="color:red">FETCH ERROR: ${err}</p>`;
     }
 
     input.value = "";
