@@ -1,4 +1,4 @@
-const API_URL = "https://corsproxy.io/?https://ai-backend-ccne.onrender.com/chat";
+const API_URL = "https://ai-backend-igmc.onrender.com/chat";
 
 document.getElementById("sendBtn").addEventListener("click", send);
 
